@@ -51,7 +51,6 @@ app.post("/newmsg", async (req, res) =>{
 })
 
 
-
 app.post("/addonline", async (req, res) =>{
   const gmail = req.body.gmail
 
@@ -63,7 +62,6 @@ app.post("/addonline", async (req, res) =>{
     console.log(err)
   }
 })
-
 
 
 //GET 
@@ -94,13 +92,12 @@ app.get('/chats', function(req, res) {
 });
 
 
-// CHAT'I SIFIRLA
 app.post('/clearchat', function(req, res) {
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     var dbo = db.db("maindb");
     dbo.collection("chats").drop(function(err, delOK) {
-      if (err) throw err;
+      if (err) throw err; // CHAT'I SIFIRLA
     });
     dbo.createCollection("chats", function(err, res) {
       if (err) throw err;
@@ -121,6 +118,8 @@ app.get('/onlines', function(req, res) {
     });
   });
 });
+
+
 
 
 app.listen(PORT, ()=>{
