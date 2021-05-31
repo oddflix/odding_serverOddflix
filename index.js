@@ -13,6 +13,7 @@ const ChatModel = require("./models/Chatdb.js")
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb+srv://admin:NCAV0l5a8wVYTFZW@cluster0.craiv.mongodb.net/maindb?retryWrites=true&w=majority";
 
+
 //POST
 app.post("/register", async (req, res) =>{
   // const username = req.body.username
@@ -32,6 +33,7 @@ app.post("/register", async (req, res) =>{
   }
 })
 
+
 app.post("/newmsg", async (req, res) =>{
   const sender = req.body.sender
   const msg = req.body.msg
@@ -47,6 +49,21 @@ app.post("/newmsg", async (req, res) =>{
     console.log(err)
   }
 })
+
+
+
+app.post("/addonline", async (req, res) =>{
+  const gmail = req.body.gmail
+
+  const onlines = new UsersModel({gmail: gmail})
+  try {
+    await onlines.save()
+    res.send("sent data")
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 
 
 //GET 
@@ -93,6 +110,17 @@ app.post('/clearchat', function(req, res) {
 });
 
 
+app.get('/onlines', function(req, res) {
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("maindb");
+    dbo.collection("online").find({}).toArray(function(err, result) {
+      if (err) throw err;
+      res.send(result)
+      db.close();
+    });
+  });
+});
 
 
 app.listen(PORT, ()=>{
