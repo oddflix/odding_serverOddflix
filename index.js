@@ -41,6 +41,7 @@ app.post("/newmsg", async (req, res) =>{
   const myimage = req.body.myimage
   const fileurl = req.body.fileurl
   
+  
   const chat = new ChatModel({sender:sender, msg: msg,  gmail: gmail, myimage: myimage, fileurl: fileurl})
   try {
     await chat.save()
