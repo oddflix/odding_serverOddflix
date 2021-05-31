@@ -5,6 +5,8 @@ mongoose.connect("mongodb+srv://admin:NCAV0l5a8wVYTFZW@cluster0.craiv.mongodb.ne
   useNewUrlParser: true,
 })
 
+console.log( moment().format('llll') )
+
 const ChatdbSchema = new mongoose.Schema({
     sender:{
         type:String,
@@ -24,7 +26,7 @@ const ChatdbSchema = new mongoose.Schema({
     },
     myimage:{
         type:String,
-        default: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/768px-Circle-icons-profile.svg.png"
+        default: ""
     },
     time:{ 
         type : Date,
