@@ -5,7 +5,6 @@ mongoose.connect("mongodb+srv://admin:NCAV0l5a8wVYTFZW@cluster0.craiv.mongodb.ne
   useNewUrlParser: true,
 })
 
-console.log( moment().format('llll') )
 
 const ChatdbSchema = new mongoose.Schema({
     sender:{
@@ -29,7 +28,7 @@ const ChatdbSchema = new mongoose.Schema({
         default: ""
     },
     time:{ 
-        type : Date,
+        type : String,
         default: moment().format('llll'), 
     },
 })
