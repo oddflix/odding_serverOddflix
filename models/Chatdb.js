@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const moment = require('moment')
+
 mongoose.connect("mongodb+srv://admin:NCAV0l5a8wVYTFZW@cluster0.craiv.mongodb.net/maindb?retryWrites=true&w=majority", {
   useNewUrlParser: true,
 })
@@ -26,7 +28,7 @@ const ChatdbSchema = new mongoose.Schema({
     },
     time:{ 
         type : Date,
-        default: Date.now 
+        default: moment().format('llll'), 
     },
 })
 
