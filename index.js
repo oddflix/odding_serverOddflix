@@ -41,23 +41,10 @@ app.post("/newmsg", async (req, res) =>{
   const myimage = req.body.myimage
   const fileurl = req.body.fileurl
   
-  
+
   const chat = new ChatModel({sender:sender, msg: msg,  gmail: gmail, myimage: myimage, fileurl: fileurl})
   try {
     await chat.save()
-    res.send("sent data")
-  } catch (err) {
-    console.log(err)
-  }
-})
-
-
-app.post("/addonline", async (req, res) =>{
-  const gmail = req.body.gmail
-
-  const onlines = new UsersModel({gmail: gmail})
-  try {
-    await onlines.save()
     res.send("sent data")
   } catch (err) {
     console.log(err)
@@ -107,6 +94,23 @@ app.post('/clearchat', function(req, res) {
   });
 });
 
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+app.post("/addonline", async (req, res) =>{
+  const username = "req.body.gmail"
+  const gmail = "req.body.gmail"
+
+  const onlines = new OnlineModel({username: username,gmail: gmail})
+  try {
+    await onlines.save()
+    res.send("sent data")
+  } catch (err) {
+    console.log(err)
+  }
+})
 
 app.get('/onlines', function(req, res) {
   MongoClient.connect(url, function(err, db) {
