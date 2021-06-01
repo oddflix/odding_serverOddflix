@@ -14,15 +14,6 @@ var MongoClient = require('mongodb').MongoClient;
 const Users = require('./models/Usersdb.js')
 var url = "mongodb+srv://admin:NCAV0l5a8wVYTFZW@cluster0.craiv.mongodb.net/maindb?retryWrites=true&w=majority";
 
-setInterval(() => {
-  const intern = new ChatModel({sender:"ZADE", msg: "ZADE",  gmail: "ZADE", myimage: "ZADE", fileurl: "ZADE"})
-  try {
-    intern.save()
-    res.send("sent data")
-  } catch (err) {
-    console.log(err)
-  }
-}, 10000);
 
 ///////////////////////////////////////////////////////////////////////////////////// USER
 app.post("/register", async (req, res) =>{
