@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const moment = require('moment')
 const app = express()
 
 app.use(express.json())
@@ -71,7 +72,7 @@ app.post("/newmsg", async (req, res) =>{
   
   if (err) throw err;
   var dbo = db.db("maindb");
-  var myobj = {sender:sender, msg:msg,  gmail:gmail, myimage:myimage, fileurl:fileurl};
+  var myobj = {sender:sender, msg:msg,  gmail:gmail, myimage:myimage||"", fileurl:fileurl||"hideimg", time:moment().format('llll')};
   dbo.collection("chats").insertOne(myobj, function(err, res) {
     if (err) throw err;
     console.log("1 document inserted");
