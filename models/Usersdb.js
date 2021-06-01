@@ -20,7 +20,7 @@ const UsersdbSchema = new mongoose.Schema({
     },
     time:{ 
         type : Date,
-        default: Date.now 
+        default: moment().format('llll'), 
     },
 })
 
