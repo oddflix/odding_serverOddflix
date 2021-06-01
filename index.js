@@ -7,12 +7,14 @@ app.use(express.json())
 app.use(cors())
 
 const PORT = process.env.PORT|| 5000;
-const UsersModel = require("./models/Usersdb.js")
-const ChatModel = require("./models/Chatdb.js")
+const Users = require("./models/Users.js")
+const Chats = require("./models/Chats.js")
+const Rooms = require("./models/Rooms.js")
 
 var MongoClient = require('mongodb').MongoClient;
-const Users = require('./models/Usersdb.js')
-var url = "mongodb+srv://admin:NCAV0l5a8wVYTFZW@cluster0.craiv.mongodb.net/maindb?retryWrites=true&w=majority";
+function url(collection) {
+  return "mongodb+srv://admin:NCAV0l5a8wVYTFZW@cluster0.craiv.mongodb.net/"+collection+"?retryWrites=true&w=majority"
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////// USER
@@ -21,7 +23,7 @@ app.post("/register", async (req, res) =>{
   const gmail = "req.body.gmail"
   const image = "req.body.image"
 
-  const user = new UsersModel({username:username, gmail: gmail, image: image})
+  const user = new Users({username:username, gmail: gmail, image: image})
   try {
     await user.save()
     res.send("sent data")
@@ -31,7 +33,7 @@ app.post("/register", async (req, res) =>{
 })
 
 app.get('/users', function(req, res) {
-  MongoClient.connect(url, function(err, db) {
+  MongoClient.connect(url("maindb"), function(err, db) {
     if (err) throw err;
     var dbo = db.db("maindb");
     
@@ -53,7 +55,7 @@ app.post("/newmsg", async (req, res) =>{
   const myimage = req.body.myimage
   const fileurl = req.body.fileurl
 
-  const chat = new ChatModel({sender:sender, msg: msg,  gmail: gmail, myimage: myimage, fileurl: fileurl})
+  const chat = new Chats({sender:sender, msg: msg,  gmail: gmail, myimage: myimage, fileurl: fileurl})
   try {
     await chat.save()
     res.send("sent data")
@@ -64,10 +66,9 @@ app.post("/newmsg", async (req, res) =>{
 
 
 app.get('/chats', function(req, res) {
-  MongoClient.connect(url, function(err, db) {
+  MongoClient.connect(url("maindb"), function(err, db) {
     if (err) throw err;
     var dbo = db.db("maindb");
-    
     dbo.collection("chats").find({}).toArray(function(err, result) {
       if (err) throw err;
       res.send(result)
@@ -78,7 +79,7 @@ app.get('/chats', function(req, res) {
 
 
 app.post('/clearchat', function(req, res) {
-  MongoClient.connect(url, function(err, db) {
+  MongoClient.connect(url("maindb"), function(err, db) {
     if (err) throw err;
     var dbo = db.db("maindb");
     dbo.collection("chats").drop(function(err, delOK) {
@@ -91,11 +92,46 @@ app.post('/clearchat', function(req, res) {
   });
 });
 
-///////////////////////////////////////////////////////////////////////////////////// ONLINES
 ///////////////////////////////////////////////////////////////////////////////////// ROOMS
+app.post("/createRoom", async (req, res) =>{
+  const roomOwner = req.body.roomOwner
+  const roomName = req.body.roomName
+  const roomPassword = req.body.roomPassword
+  const roomId = Math.random().toString(36).substring(2,20).slice(2)
+
+  MongoClient.connect(url("rooms"), function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("rooms");
+    dbo.createCollection(roomId, function(err, res) {
+      if (err) throw err;
+      db.close();
+    });
+  });
+
+  const user = new Rooms({roomOwner:roomOwner, roomName:roomName, roomPassword: roomPassword, roomId: roomId})
+  try {
+    await user.save()
+    res.send("sent data")
+  } catch (err) {
+    console.log(err)
+  }
+})
 
 
+app.get('/rooms', function(req, res) {
+  MongoClient.connect(url("maindb"), function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("maindb");
+    dbo.collection("rooms").find({}).toArray(function(err, result) {
+      if (err) throw err;
+      console.log(result);
+      db.close();
+    });
+  });
+});
 
+
+///////////////////////////////////////////////////////////////////////////////////// 
 
 
 app.listen(PORT, ()=>{
