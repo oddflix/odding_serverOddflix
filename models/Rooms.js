@@ -10,6 +10,10 @@ const Schema = new mongoose.Schema({
         type:String,
         required: true,
     },
+    roomOwnerMail:{
+        type:String,
+        required: true,
+    },
     roomName:{
         type:String,
         required: true,

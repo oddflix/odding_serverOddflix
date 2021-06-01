@@ -18,7 +18,7 @@ function url(collection) {
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////// USER
+///////////////////////////////////////////////////////////////////////////////////// USERS
 app.post("/register", async (req, res) =>{
   const username = "req.body.username"
   const gmail = "req.body.gmail"
@@ -96,6 +96,7 @@ app.post('/clearchat2', function(req, res) {
 ///////////////////////////////////////////////////////////////////////////////////// ROOMS
 app.post("/createRoom", async (req, res) =>{
   const roomOwner = req.body.roomOwner
+  const roomOwnerMail = req.body.roomOwnerMail
   const roomName = req.body.roomName
   const roomPassword = req.body.roomPassword
   const roomId = Math.random().toString(36).substring(2,20).slice(2)
@@ -109,7 +110,7 @@ app.post("/createRoom", async (req, res) =>{
     });
   });
 
-  const user = new Rooms({roomOwner:roomOwner, roomName:roomName, roomPassword: roomPassword, roomId: roomId})
+  const user = new Rooms({roomOwner:roomOwner, roomOwnerMail:roomOwnerMail, roomName:roomName, roomPassword: roomPassword, roomId: roomId})
   try {
     await user.save()
     res.send("sent data")
@@ -180,6 +181,21 @@ app.post('/clearchat/:id', function(req, res) {
     });
   });
 });
+
+///////////////////////////////////////////////////////////////////////////////////// VIPs
+app.get('/vipusers', function(req, res) {
+  MongoClient.connect(url("maindb"), function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("maindb");
+    
+    dbo.collection("vipusers").find({}).toArray(function(err, result) {
+      if (err) throw err;
+      res.send(result)
+      db.close();
+    });
+  });
+});
+
 ///////////////////////////////////////////////////////////////////////////////////// 
 
 
