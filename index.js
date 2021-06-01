@@ -47,7 +47,7 @@ app.get('/users', function(req, res) {
 
 
 ///////////////////////////////////////////////////////////////////////////////////// CHAT
-app.post("/newmsgESKI", async (req, res) =>{
+app.post("/newmsg", async (req, res) =>{
   const sender = req.body.sender
   const msg = req.body.msg
   const gmail = req.body.gmail
@@ -63,23 +63,23 @@ app.post("/newmsgESKI", async (req, res) =>{
   }
 })
 
-app.post("/newmsg", async (req, res) =>{
-  const sender = req.body.sender
-  const msg = req.body.msg
-  const gmail = req.body.gmail
-  const myimage = req.body.myimage
-  const fileurl = req.body.fileurl
+// app.post("/newmsg", async (req, res) =>{
+//   const sender = req.body.sender
+//   const msg = req.body.msg
+//   const gmail = req.body.gmail
+//   const myimage = req.body.myimage
+//   const fileurl = req.body.fileurl
   
-  if (err) throw err;
-  var dbo = db.db("maindb");
-  var myobj = {sender:sender, msg:msg,  gmail:gmail, myimage:myimage||"", fileurl:fileurl||"hideimg", time:moment().format('llll')};
-  dbo.collection("chats").insertOne(myobj, function(err, res) {
-    if (err) throw err;
-    console.log("1 document inserted");
-    db.close();
-  });
+//   if (err) throw err;
+//   var dbo = db.db("maindb");
+//   var myobj = {sender:sender, msg:msg,  gmail:gmail, myimage:myimage, fileurl:fileurl, time:moment().format('llll')};
+//   dbo.collection("chats").insertOne(myobj, function(err, res) {
+//     if (err) throw err;
+//     console.log("1 document inserted");
+//     db.close();
+//   });
 
-})
+// })
 
 
 app.get('/chats', function(req, res) {
