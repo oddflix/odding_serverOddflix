@@ -1,7 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
-const moment = require('moment')
 const app = express()
 
 app.use(express.json())
@@ -63,24 +62,6 @@ app.post("/newmsg", async (req, res) =>{
   }
 })
 
-// app.post("/newmsg", async (req, res) =>{
-//   const sender = req.body.sender
-//   const msg = req.body.msg
-//   const gmail = req.body.gmail
-//   const myimage = req.body.myimage
-//   const fileurl = req.body.fileurl
-  
-//   if (err) throw err;
-//   var dbo = db.db("maindb");
-//   var myobj = {sender:sender, msg:msg,  gmail:gmail, myimage:myimage, fileurl:fileurl, time:moment().format('llll')};
-//   dbo.collection("chats").insertOne(myobj, function(err, res) {
-//     if (err) throw err;
-//     console.log("1 document inserted");
-//     db.close();
-//   });
-
-// })
-
 
 app.get('/chats', function(req, res) {
   MongoClient.connect(url, function(err, db) {
@@ -112,6 +93,7 @@ app.post('/clearchat', function(req, res) {
 
 ///////////////////////////////////////////////////////////////////////////////////// ONLINES
 ///////////////////////////////////////////////////////////////////////////////////// ROOMS
+
 
 
 
