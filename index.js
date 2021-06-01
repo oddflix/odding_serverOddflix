@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const moment = require('moment')
 const app = express()
 
 app.use(express.json())
@@ -47,8 +48,8 @@ app.get('/users', function(req, res) {
 
 
 
-///////////////////////////////////////////////////////////////////////////////////// CHAT
-app.post("/newmsg", async (req, res) =>{
+///////////////////////////////////////////////////////////////////////////////////// OLD CHATS
+app.post("/newmsg2", async (req, res) =>{
   const sender = req.body.sender
   const msg = req.body.msg
   const gmail = req.body.gmail
@@ -65,7 +66,7 @@ app.post("/newmsg", async (req, res) =>{
 })
 
 
-app.get('/chats', function(req, res) {
+app.get('/chats2', function(req, res) {
   MongoClient.connect(url("maindb"), function(err, db) {
     if (err) throw err;
     var dbo = db.db("maindb");
@@ -78,7 +79,7 @@ app.get('/chats', function(req, res) {
 });
 
 
-app.post('/clearchat', function(req, res) {
+app.post('/clearchat2', function(req, res) {
   MongoClient.connect(url("maindb"), function(err, db) {
     if (err) throw err;
     var dbo = db.db("maindb");
@@ -118,19 +119,67 @@ app.post("/createRoom", async (req, res) =>{
 })
 
 
-app.get('/rooms', function(req, res) {
+app.get('/rooms/:id', function(req, res) {
+  var roomId= req.params.id;
   MongoClient.connect(url("maindb"), function(err, db) {
     if (err) throw err;
     var dbo = db.db("maindb");
     dbo.collection("rooms").find({}).toArray(function(err, result) {
       if (err) throw err;
+      res.send(result)
       console.log(result);
       db.close();
     });
   });
 });
 
+///////////////////////////////////////////////////////////////////////////////////// Room Chats
+app.get('/roomchat/:id', (req, res) => {
+  var roomId= req.params.id;
+  MongoClient.connect(url("rooms"), function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("rooms");
+    dbo.collection(roomId).find({}).toArray(function(err, result) {
+      if (err) throw err;
+      res.send(result)
+      db.close();
+    });
+  });
+})
 
+app.post("/newmsg/:id", async (req, res) =>{
+  var roomId= req.params.id;
+  const sender = req.body.sender
+  const msg = req.body.msg
+  const gmail = req.body.gmail
+  const myimage = req.body.myimage
+  const fileurl = req.body.fileurl
+
+  const newChat = {sender:sender, msg: msg,  gmail: gmail, myimage: myimage, fileurl: fileurl, time:moment().format('llll')}
+  MongoClient.connect(url("rooms"), function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("rooms");
+    dbo.collection(roomId).insertOne(newChat, function(err, res) {
+      if (err) throw err;
+      db.close();
+    });
+  });
+})
+
+app.post('/clearchat/:id', function(req, res) {
+  var roomId= req.params.id;
+  MongoClient.connect(url("rooms"), function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("rooms");
+    dbo.collection(roomId).drop(function(err, delOK) {
+      if (err) throw err; // CHAT'I SIFIRLA
+    });
+    dbo.createCollection(roomId, function(err, res) {
+      if (err) throw err;
+      db.close();
+    });
+  });
+});
 ///////////////////////////////////////////////////////////////////////////////////// 
 
 
