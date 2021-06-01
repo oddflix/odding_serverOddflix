@@ -70,9 +70,9 @@ app.post("/newmsg", async (req, res) =>{
   const fileurl = req.body.fileurl
   
   if (err) throw err;
-  var dbo = db.db("mydb");
+  var dbo = db.db("maindb");
   var myobj = {sender:sender, msg:msg,  gmail:gmail, myimage:myimage, fileurl:fileurl};
-  dbo.collection("customers").insertOne(myobj, function(err, res) {
+  dbo.collection("chats").insertOne(myobj, function(err, res) {
     if (err) throw err;
     console.log("1 document inserted");
     db.close();
